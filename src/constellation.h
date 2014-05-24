@@ -11,9 +11,7 @@
 #include "backDrop.h"
 #include "ofxOsc.h"
 
-#define HOST "localhost"
-#define PORT 8080
-#define InPORT 8081
+
 
 class constellation : public ofBaseApp{
     
@@ -24,8 +22,10 @@ class constellation : public ofBaseApp{
     void drawStar(ofPoint theStar);
     void setup(ofPoint size,int _granularity, ofFbo _fbo);
     void draw();
+    void update(int myIndex);
     void addPoint(ofPoint thePoint);
     void endConstellation();
+    void interpolateBetweenPoints(float x, float y);
     
     float round(float number, float round);
 
@@ -41,10 +41,16 @@ class constellation : public ofBaseApp{
     
     ofImage image;
     ofPixels fboPixels;
-    ofxOscSender oscSender;
-    ofxOscMessage oscMessage;
+    //ofxOscSender oscSender;
+    //ofxOscMessage oscMessage;
     ofPoint pbp;
-    ofxOscReceiver oscReceiver;
+    ofPoint dbp;
+    int intTime;
+    int interpIndex;
+    
+    bool isFinished;
+    
+   // ofxOscReceiver oscReceiver;
     
     
 };

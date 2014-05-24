@@ -5,6 +5,10 @@
 #include "constellation.h"
 #include "ofxOSC.h"
 
+#define HOST "localhost"
+#define PORT 8080
+#define InPORT 8081
+
 class testApp : public ofBaseApp{
 
 	public:
@@ -24,6 +28,8 @@ class testApp : public ofBaseApp{
     
     
     constellation currentConstellation;
+    int constellationCounter;
+    vector<constellation> constellationBank;
     constellation currentConstellation2;
     ofVec2f myBDSize;
     ofVec2f myBDStart;
@@ -32,6 +38,11 @@ class testApp : public ofBaseApp{
     
     GLUquadricObj *quadric;
     GLUquadricObj *quadric2;
+    
+    ofxOscSender oscSender;
+    ofxOscMessage oscMessage;
+    ofPoint pbp;
+    ofxOscReceiver oscReceiver;
 
 
 		

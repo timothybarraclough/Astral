@@ -1,5 +1,8 @@
 NRev reverb => dac;
-0.4 => reverb.mix;
+reverb => NRev r2 => dac;
+0.05 => r2.gain;
+0.0 => r2.mix;
+0.1 => reverb.mix;
 OscSend xmit;
 "localhost" => string hostname;
 8081 => int port;
@@ -12,7 +15,7 @@ recv.event( "/addStar, ii" ) @=> OscEvent addStar;
 recv.event( "/endConst, i" ) @=> OscEvent endConst;
 
 16 => int granularity;
-[60,62,63,65,67,68,70,72,74,75,77,79,80,82,84,86] @=> int notes[];
+[60,62,63,65,67,68,70,72,74,75,77,79,80,82,84,86,87] @=> int notes[];
 Event pulse;
 100=> int pulseTime;
 
@@ -45,6 +48,7 @@ class Constellation{
     Star stars[0];
     0 => int counter;
     0 => int lastCount;
+    int IDNumber;
     int endCount;
     true => int isEmpty;
     false => int terminatePulse;
@@ -59,11 +63,21 @@ class Constellation{
         }
     }
     
+    fun void init(int id){
+     id => IDNumber; 
+     stars.clear();
+     0 => lastCount;
+     0 => counter;
+     0 => endCount;
+     true => isEmpty;
+     false => terminatePulse; 
+    }
+    
     fun void startConstellation(int x, int y){
         spork ~ starPulse();
         <<<"Constellation Started">>>;
         false => isEmpty;
-        spork ~ playNote(x,y);
+        spork ~ playNote(x - (IDNumber * 12),y);
         oscAddStar(x,y);
 
         Star s;
@@ -78,12 +92,13 @@ class Constellation{
         counter => endCount;
             Star s;
             s.init(stars[0].x,stars[0].y,lastCount);
-            oscAddStar(stars[0].x,stars[0].y);
+           // oscAddStar(stars[0].x,stars[0].y);
 
             lastCount => stars[0].t;
             <<<"First added with time  :  " + lastCount>>>;
            // stars << s;
         true => terminatePulse;
+        
         
     }
     
@@ -123,7 +138,9 @@ fun void playBackConstellation(Constellation con){
             
             // if(starIndex != con.stars.size()) 
         spork ~ playNote(con.stars[starIndex].x,con.stars[starIndex].y);
-        spork ~ interpolator(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())]);
+        //spork ~ interpolator(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())],con.IDNumber);
+        //spork ~ interp(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())],con.IDNumber);
+        spork ~ interp2(starIndex,con);
         (starIndex + 1) % con.stars.cap() => starIndex;
         //if (starIndex == con.stars.size()) 0 => starIndex;
         //timeGuy +=> totalCount;
@@ -146,24 +163,12 @@ if (con.Playback){
     me.exit();   
 }
 }
+0 => int cC;
+Constellation consts[4];
+consts[cC] @=> Constellation c;
+c.init(cC);
 
-Constellation c;
 
-/*
-for (0 => int i; i < 4; i++){
-c.addStar(Std.rand2(0,8),Std.rand2(0,8));  
-Std.rand2(7,17) * pulseTime::ms => now; 
-    
-}
-c.endConstellation();
-//1200::ms => now;
-spork ~ playBackConstellation(c);
-
-120::second => now;
-false => c.Playback;
-2::second => now;
-<<<"terminating program">>>;
-*/
 
 spork ~ OSCListener1();
 spork ~ OSCListener2();
@@ -189,7 +194,7 @@ fun void oscAddStar(int x, int y){
     
 }
 
-fun void interpolator(Star s1, Star s2){
+fun void interpolator(Star s1, Star s2, int id){
     
     s1.t => int myDuration;
     pulseTime / 20.0 => float fraction;
@@ -197,14 +202,37 @@ fun void interpolator(Star s1, Star s2){
     //1200::ms => now;
     for (0 => float i; i < pulseTime*myDuration; 10 + i => i)
     {
-            xmit.startMsg( "/pPosition", "ff" );
+            xmit.startMsg( "/pPosition", "ffi" );
             CosineInterpolation(s1.x,s2.x,i/myDuration) => float x;
             CosineInterpolation(s1.y,s2.y,i/myDuration) => float y;
             x => xmit.addFloat;
             y => xmit.addFloat;
+            id => xmit.addInt;
             (10/pulseTime)::ms => now;   
     }  
 }
+
+fun void interp(Star s1, Star s2, int id)
+{
+ xmit.startMsg("/pPosition", "ffffii");
+ s1.x => xmit.addFloat;
+ s1.y => xmit.addFloat;
+ s2.x => xmit.addFloat;
+ s2.y => xmit.addFloat;
+ id => xmit.addInt;
+ s1.t => xmit.addInt;
+ <<<"Sent Message">>>;
+}
+
+fun void interp2(int index, Constellation conn)
+{
+    xmit.startMsg("/pPosition", "iii");
+    index => xmit.addInt;
+    conn.stars[index].t => xmit.addInt;
+    conn.IDNumber => xmit.addInt;
+    <<<index>>>;
+}
+
 
 fun float CosineInterpolation(
 float y2,float y1,
@@ -237,10 +265,10 @@ fun void OSCListener1(){
             c.addStar(x,y);  
         }
     }
-}
+} 
 
-fun void OSCListener2(){
-    while ( true )
+fun void OSCListener2(){ 
+    while ( true ) 
     {
         endConst => now;
         pulse => now;
@@ -248,8 +276,19 @@ fun void OSCListener2(){
             endConst.getInt();  
             c.endConstellation();
             spork ~ playBackConstellation(c);
+            startNewConstellation();
         }
     }
+}
+
+fun void startNewConstellation(){
+ 
+ (cC + 1) % consts.size() => cC;
+ consts[cC] @=> c;
+ c.init(cC);
+ xmit.startMsg( "/addConstellation", "i" );
+            cC => xmit.addInt;
+    
 }
 
 while(true){

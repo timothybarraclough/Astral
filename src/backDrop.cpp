@@ -23,8 +23,8 @@ void backDrop::draw(){
     backDropWindow.begin();
     ofTranslate(border, border);
     ofNoFill();
-    ofSetLineWidth(3);
-    ofSetColor(200,200,200,120);
+    ofSetLineWidth(2);
+    ofSetColor(200,200,200,80);
     ofRect(0, 0, windowSize.x, windowSize.y);
     
     
