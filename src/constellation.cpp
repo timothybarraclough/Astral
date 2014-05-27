@@ -9,27 +9,27 @@
 #include "constellation.h"
 const int border = 5;
 
-void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo){
+void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo, int _myID){
 
     granularity = _granularity;
+    myID = _myID;
     constellationWindow = _fbo;
     windowSize = _size;
     isFinished = false;
     interpIndex = 0;
-  //  windowSize.x += border * 2;
-   // windowSize.y += border * 2;
-   // constellationWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
+    //windowSize.x += border * 2;
+    //windowSize.y += border * 2;
+    //constellationWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
     sphereWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
     myStars.resize(0);
-    
-    
+
 }
 
 void constellation::update(int myIndex){
 
     if (isFinished)
     {
-        cout << pbp.x << "    " << pbp.y <<   "\n";
+       // cout << "Constellation index :  " << myID << " has an interpolation index  of :  "<< interpIndex <<   "\n";
     }
     
     
@@ -68,7 +68,7 @@ void constellation::draw(){
     }
     
     ofSetColor(255,255,255,255);
-    ofCircle(dbp.x, dbp.y, 5);
+    if(isFinished)ofCircle(dbp.x, dbp.y, 5);
     ofSetColor(255, 180, 160,30);
    // myBD.draw();
 
@@ -107,7 +107,7 @@ void constellation::endConstellation(){
     myCoords.insert(myCoords.end(),myCoords.at(0));
     pbp.set(myStars.at(0).x,myStars.at(0).y);
     isFinished = true;
-cout << "isFinished set to true";
+    cout << "isFinished set to true";
     
 }
 

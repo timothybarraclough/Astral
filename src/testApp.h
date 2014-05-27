@@ -29,12 +29,13 @@ class testApp : public ofBaseApp{
     
     constellation currentConstellation;
     int constellationCounter;
-    vector<constellation> constellationBank;
+    constellation constellationBank[4];
     constellation currentConstellation2;
     ofVec2f myBDSize;
     ofVec2f myBDStart;
     ofFbo fbo;
     backDrop myBD;
+    ofImage bg;
     
     GLUquadricObj *quadric;
     GLUquadricObj *quadric2;

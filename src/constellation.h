@@ -20,7 +20,7 @@ class constellation : public ofBaseApp{
     
     public :
     void drawStar(ofPoint theStar);
-    void setup(ofPoint size,int _granularity, ofFbo _fbo);
+    void setup(ofPoint size,int _granularity, ofFbo _fbo, int _myID);
     void draw();
     void update(int myIndex);
     void addPoint(ofPoint thePoint);
@@ -34,6 +34,7 @@ class constellation : public ofBaseApp{
     
     int granularity;
     vector<ofPoint> myStars;
+    int myID;
     
     ofFbo sphereWindow;
     vector<ofPoint> myCoords;

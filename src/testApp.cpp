@@ -14,10 +14,10 @@ void testApp::setup(){
 
     myBDStart = ofVec2f(20, 30);
     myBDSize = ofVec2f(400, 400);
-    fbo.allocate(myBDSize.x + (2 * border),myBDSize.y + (2 * border), GL_RGBA);
+    fbo.allocate(myBDSize.x + (2 * border),myBDSize.y + (2 * border), GL_RGBA,4);
     myBD.setup(myBDSize, 16,fbo);
     constellationCounter = 0;
-    currentConstellation.setup(myBDSize,16,fbo);
+    currentConstellation.setup(myBDSize,16,fbo,constellationCounter);
     //constellationBank.insert(constellationBank.end(), currentConstellation);
    // currentConstellation2.setup(myBDSize,8,fbo);
     ofBackground(30,30,50);
@@ -30,6 +30,9 @@ void testApp::setup(){
     gluQuadricNormals(quadric2, GLU_SMOOTH);
     
     ofDisableArbTex();
+    
+    bg.loadImage("bg.jpg");
+    bg.resize(ofGetWidth(), ofGetHeight());
 
 }
 
@@ -40,50 +43,19 @@ void testApp::update(){
         // get the next message
         ofxOscMessage m;
         oscReceiver.getNextMessage( &m );
-        //cout << m.getAddress();
-        // check for mouse moved message
-        /*
-        if (m.getAddress() == "/pPosition")
-        {
-            // both the arguments are int32's
-            float guy = myBDSize.x / granularity;
-            float x = m.getArgAsFloat(0) * guy;
-            
-            float y = m.getArgAsFloat(1) * guy;
-            constellationBank.at(m.getArgAsInt32(2)).pbp.set(x, y);
-            
-        }
-        
         
         if (m.getAddress() == "/pPosition")
         {
-            // both the arguments are int32's
-           
-            constellation co = constellationBank.at(m.getArgAsInt32(4));
-            float guy = myBDSize.x / granularity;
-            co.pbp.x = m.getArgAsFloat(0) * guy;
-            co.pbp.y = m.getArgAsFloat(1) * guy;
-            co.dbp.x = m.getArgAsFloat(2) * guy;
-            co.dbp.y = m.getArgAsFloat(3) * guy;
-            co.intTime = m.getArgAsInt32(5);
-           // cout << "New target  =  " << co.dbp.x << "  /  " << co.dbp.y << "\n";
-           // cout << "New xurret  =  " << co.pbp.x << "  /  " << co.pbp.y << "\n";
-           // .pbp.set(x, y);
             
-        }
-         */
-        
-        if (m.getAddress() == "/pPosition")
-        {
-            constellation co = constellationBank.at(m.getArgAsInt32(2));
-            //co.interpIndex = m.getArgAsInt32(0);
-            co.interpIndex = ( co.interpIndex + 1 ) % co.myStars.size();
-            //cout << co.myCoords[m.getArgAsInt32(0)].x << "  x  coord" << co.myCoords[0].y << "  y coord  \n";
-            constellationBank.at(m.getArgAsInt32(2)).interpolateBetweenPoints(constellationBank.at(m.getArgAsInt32(2)).myStars.at(m.getArgAsInt32(0)).x, (constellationBank.at(m.getArgAsInt32(2)).myStars.at(m.getArgAsInt32(0)).y));
-            // cout << co.pbp.x << "\n";
-            // co.intTime = m.getArgAsInt32(1);
-            //cout << co.myStars[m.getArgAsInt32(0)].x << "\n";
-            //cout <<  "constellation index  " << m.getArgAsInt32(2) << "  star index  " << m.getArgAsInt32(0) << "\n";
+            /*
+            constellation co = constellationBank[m.getArgAsInt32(2)];
+            constellationBank[m.getArgAsInt32(2)].interpIndex = m.getArgAsInt32(1);
+            
+            if(constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).x && (constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).y)){
+            constellationBank[m.getArgAsInt32(2)].interpolateBetweenPoints(constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).x, (constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).y));
+            }
+             */
+            
             
         }
         else if(m.getAddress() == "/addStar"){
@@ -98,24 +70,43 @@ void testApp::update(){
             
             constellation newConst;
             
-            newConst.setup(myBDSize,16,fbo);
+            newConst.setup(myBDSize,16,fbo, (constellationCounter));
+            
             if (currentConstellation.isFinished){
-               cout <<  "placing constellation at   " << constellationBank.size() << "\n";
-            if (constellationBank.size() < 4 )constellationBank.insert(constellationBank.end(), currentConstellation);
-            else constellationBank[constellationCounter] = currentConstellation;
-                cout << "constellation bank size is now  :  " << constellationBank.size() << "\n";
+            /*
+               cout <<  "placing constellation at   " << constellationBank.arraySize() << "\n";
+                
+                if (constellationBank.size() <= 4){
+                    
+                constellationBank.insert(constellationBank.end(), currentConstellation);
+                    cout << "constellation size is now " << constellationBank.size() << "\n";
+                }
+            else{
+                cout << m.getArgAsInt32(0) << "\n";
+                constellationBank[m.getArgAsInt32(0)] = currentConstellation;
+            }
             constellationCounter =  (constellationCounter + 1) % 4;
             currentConstellation = newConst;
             cout << "constellation added \n";
             }
+             */
+               // constellationBank[constellationCounter] = currentConstellation;
+                cout <<  "placing constellation at   " << m.getArgAsInt32(0) << "\n";
+                constellationBank[m.getArgAsInt32(0)] = currentConstellation;
+                constellationCounter =  (constellationCounter + 1) % 4;
+                currentConstellation = newConst;
+            }
         }
     }
+        
     fbo.begin();
-    ofClear(255,255,255);
+    ofClear(255,255,255,10);
     fbo.end();
-    for (int i = 0; i < constellationBank.size(); i++){
-        constellationBank.at(i).update(i);
-        constellationBank.at(i).draw();
+    for (int i = 0; i < 4; i++){
+        if(constellationBank[i].isFinished){
+        constellationBank[i].update(i);
+        constellationBank[i].draw();
+        }
     }
     currentConstellation.draw();
    // currentConstellation2.draw();
@@ -124,37 +115,26 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    //cout << constellationBank.size() << "\n";
-    /*
-    ofPushStyle();
-    ofTranslate(ofGetWidth()/2,ofGetHeight()/2, ofGetWidth()/2);
     
-    //rotate sphere over time
-    ofRotateY(-90 + 18 * sin(ofGetFrameNum()/100.0));
-    ofRotateX(90); //north pole facing up
-    
-    //bind and draw texture
-    currentConstellation.image.getTextureReference().bind();
-    gluSphere(quadric, 150, 1500, 1500);
-    currentConstellation2.image.getTextureReference().unbind();
-    ofPopStyle();
-     */
     ofBackground(30,30,50);
+    // bg.draw(0,0);
     myBD.draw();
     //currentConstellation.constellationWindow.draw(myBDStart.x, myBDStart.y);
     fbo.draw(myBDStart.x, myBDStart.y);
     //currentConstellation.sphereWindow.draw(ofGetWidth()/2 + myBDStart.x, myBDStart.y);
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     if (key == 32){
-        currentConstellation.endConstellation();
-        ofxOscMessage m;
-        m.setAddress( "/endConst" );
-        m.addIntArg(0);
-        oscSender.sendMessage( m);
+        if (currentConstellation.myStars.size() > 0){
+            currentConstellation.endConstellation();
+            ofxOscMessage m;
+            m.setAddress( "/endConst" );
+            m.addIntArg(constellationCounter);
+            oscSender.sendMessage( m);
+        }
     }
 }
 
