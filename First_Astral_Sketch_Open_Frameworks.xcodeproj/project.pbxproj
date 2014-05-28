@@ -11,6 +11,9 @@
 		16AB83D9D862B91E9421E3C8 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C794F73CD7262AB830BD5859 /* ofxMidiOut.cpp */; };
 		2A8E1E5C9D31CCD2D411B134 /* ofxMidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE71E86E8036D3ADA8BB0A4D /* ofxMidiMessage.cpp */; };
 		331904A7517EE0E3BCF5D91D /* ofxRtMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5033BD0DCCC3DA63EFE25C32 /* ofxRtMidiIn.cpp */; };
+		542388451935560600B2C96E /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5423883E1935560600B2C96E /* Client.mm */; };
+		542388461935560600B2C96E /* Events.mm in Sources */ = {isa = PBXBuildFile; fileRef = 542388401935560600B2C96E /* Events.mm */; };
+		542388471935560600B2C96E /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = 542388431935560600B2C96E /* Server.mm */; };
 		54296DF419296CFE0024979C /* backDrop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54296DF219296CFE0024979C /* backDrop.cpp */; };
 		54296DF7192982570024979C /* constellation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54296DF5192982570024979C /* constellation.cpp */; };
 		54296E001929E8F50024979C /* ofxCubeMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54296DFC1929E8F50024979C /* ofxCubeMap.cpp */; };
@@ -27,6 +30,8 @@
 		549617F2192C87ED007663CA /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 549617E3192C87ED007663CA /* OscPrintReceivedElements.cpp */; };
 		549617F3192C87ED007663CA /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 549617E5192C87ED007663CA /* OscReceivedElements.cpp */; };
 		549617F4192C87ED007663CA /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 549617E7192C87ED007663CA /* OscTypes.cpp */; };
+		54A36F901935603A009FDDBE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54A36F8F1935603A009FDDBE /* Foundation.framework */; };
+		54A36F9219356048009FDDBE /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54A36F9119356048009FDDBE /* CoreData.framework */; };
 		5F1A2F9E2A769458030E2812 /* ofxRtMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5AD85C65B562E2766DEEEA25 /* ofxRtMidiOut.cpp */; };
 		6F7FE47139E27331A8D94BFD /* ofxMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 447FEE1205FEC82A7EADD367 /* ofxMidiIn.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
@@ -103,6 +108,14 @@
 		4AA59EAFF8EB23BBC60DC288 /* NetworkingUtils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtils.cpp; path = ../../of_v0.8.0_osx_release/addons/ofxOsc/libs/oscpack/src/ip/posix/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
 		4F56A641A812044E5EC7EC42 /* RtError.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = RtError.h; path = ../../of_v0.8.0_osx_release/addons/ofxMidi/libs/rtmidi/RtError.h; sourceTree = SOURCE_ROOT; };
 		5033BD0DCCC3DA63EFE25C32 /* ofxRtMidiIn.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxRtMidiIn.cpp; path = ../../of_v0.8.0_osx_release/addons/ofxMidi/src/desktop/ofxRtMidiIn.cpp; sourceTree = SOURCE_ROOT; };
+		5423883D1935560600B2C96E /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		5423883E1935560600B2C96E /* Client.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Client.mm; sourceTree = "<group>"; };
+		5423883F1935560600B2C96E /* Events.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
+		542388401935560600B2C96E /* Events.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Events.mm; sourceTree = "<group>"; };
+		542388411935560600B2C96E /* ofxBonjour.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxBonjour.h; sourceTree = "<group>"; };
+		542388421935560600B2C96E /* Server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
+		542388431935560600B2C96E /* Server.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Server.mm; sourceTree = "<group>"; };
+		542388441935560600B2C96E /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		54296DF219296CFE0024979C /* backDrop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = backDrop.cpp; sourceTree = "<group>"; };
 		54296DF319296CFE0024979C /* backDrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = backDrop.h; sourceTree = "<group>"; };
 		54296DF5192982570024979C /* constellation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = constellation.cpp; sourceTree = "<group>"; };
@@ -207,6 +220,9 @@
 		549617E6192C87ED007663CA /* OscReceivedElements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscReceivedElements.h; sourceTree = "<group>"; };
 		549617E7192C87ED007663CA /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OscTypes.cpp; sourceTree = "<group>"; };
 		549617E8192C87ED007663CA /* OscTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscTypes.h; sourceTree = "<group>"; };
+		54A36F8D19355FB8009FDDBE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		54A36F8F1935603A009FDDBE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		54A36F9119356048009FDDBE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		552F83B3B7651736DA9929D7 /* PacketListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = PacketListener.h; path = ../../of_v0.8.0_osx_release/addons/ofxOsc/libs/oscpack/src/ip/PacketListener.h; sourceTree = SOURCE_ROOT; };
 		5710627DFFE1A214F4882FB3 /* RtMidi.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = RtMidi.h; path = ../../of_v0.8.0_osx_release/addons/ofxMidi/libs/rtmidi/RtMidi.h; sourceTree = SOURCE_ROOT; };
 		5AD85C65B562E2766DEEEA25 /* ofxRtMidiOut.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxRtMidiOut.cpp; path = ../../of_v0.8.0_osx_release/addons/ofxMidi/src/desktop/ofxRtMidiOut.cpp; sourceTree = SOURCE_ROOT; };
@@ -249,8 +265,8 @@
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		E4B69B5B0A3A1756003C02F2 /* First_Astral_Sketch_Open_FrameworksDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = First_Astral_Sketch_Open_FrameworksDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
-		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
+		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 30; name = testApp.cpp; path = src/testApp.cpp; sourceTree = SOURCE_ROOT; };
 		E4B69E1F0A3A1BDC003C02F2 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = src/testApp.h; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4C2424410CC5A17004149E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -273,6 +289,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54A36F9219356048009FDDBE /* CoreData.framework in Frameworks */,
+				54A36F901935603A009FDDBE /* Foundation.framework in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
@@ -330,6 +348,30 @@
 				86D2677079A3AF4A5A88E29A /* oscpack */,
 			);
 			name = libs;
+			sourceTree = "<group>";
+		};
+		5423883B1935560600B2C96E /* ofxBonjour */ = {
+			isa = PBXGroup;
+			children = (
+				5423883C1935560600B2C96E /* src */,
+			);
+			name = ofxBonjour;
+			sourceTree = "<group>";
+		};
+		5423883C1935560600B2C96E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				5423883D1935560600B2C96E /* Client.h */,
+				5423883E1935560600B2C96E /* Client.mm */,
+				5423883F1935560600B2C96E /* Events.h */,
+				542388401935560600B2C96E /* Events.mm */,
+				542388411935560600B2C96E /* ofxBonjour.h */,
+				542388421935560600B2C96E /* Server.h */,
+				542388431935560600B2C96E /* Server.mm */,
+				542388441935560600B2C96E /* Utils.h */,
+			);
+			name = src;
+			path = ../../of_v0.8.0_osx_release/addons/ofxBonjour/src;
 			sourceTree = "<group>";
 		};
 		54296DFA1929E8F50024979C /* ofxSkyBox */ = {
@@ -721,6 +763,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				5423883B1935560600B2C96E /* ofxBonjour */,
 				549617BE192C87ED007663CA /* ofxOsc */,
 				54961787192C8775007663CA /* ofxOsc */,
 				54961750192C83CB007663CA /* ofxOsc */,
@@ -734,6 +777,9 @@
 		BBAB23C913894ECA00AA2426 /* system frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				54A36F9119356048009FDDBE /* CoreData.framework */,
+				54A36F8F1935603A009FDDBE /* Foundation.framework */,
+				54A36F8D19355FB8009FDDBE /* Cocoa.framework */,
 				E7F985F515E0DE99003869B5 /* Accelerate.framework */,
 				E4C2424410CC5A17004149E2 /* AppKit.framework */,
 				E4C2424510CC5A17004149E2 /* Cocoa.framework */,
@@ -970,6 +1016,8 @@
 				331904A7517EE0E3BCF5D91D /* ofxRtMidiIn.cpp in Sources */,
 				549617E9192C87ED007663CA /* ofxOscBundle.cpp in Sources */,
 				5F1A2F9E2A769458030E2812 /* ofxRtMidiOut.cpp in Sources */,
+				542388451935560600B2C96E /* Client.mm in Sources */,
+				542388471935560600B2C96E /* Server.mm in Sources */,
 				CB192461229607ED5A5CE2B1 /* ofxBaseMidi.cpp in Sources */,
 				549617F3192C87ED007663CA /* OscReceivedElements.cpp in Sources */,
 				549617EA192C87ED007663CA /* ofxOscMessage.cpp in Sources */,
@@ -979,6 +1027,7 @@
 				16AB83D9D862B91E9421E3C8 /* ofxMidiOut.cpp in Sources */,
 				D618606312A7B31B614230EA /* RtMidi.cpp in Sources */,
 				549617EE192C87ED007663CA /* IpEndpointName.cpp in Sources */,
+				542388461935560600B2C96E /* Events.mm in Sources */,
 				54296E001929E8F50024979C /* ofxCubeMap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1178,6 +1227,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/";
 				WRAPPER_EXTENSION = app;
@@ -1264,6 +1314,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/ ../../../addons/ofxOsc/libs/oscpack/src/";
 				WRAPPER_EXTENSION = app;

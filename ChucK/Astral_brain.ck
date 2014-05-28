@@ -1,12 +1,12 @@
 //——————————————————————————————————————————————// AUDIO Setup /
-NRev reverb => dac;
+NRev reverb;// => dac;
 reverb => NRev r2 => dac;
-0.15 => r2.gain;
+0.45 => r2.gain;
 0.8 => r2.mix;
 0.2 => reverb.mix;
 
 //Note Selection
-[60,62,63,65,67,69,70,72,74,75,77,79,81,82,84,86,87] @=> int notes[];
+[40,42,43,45,47,48,50] @=> int notes[];
 
 
 //——————————————————————————————————————————————// OSC Variables /
@@ -23,7 +23,7 @@ reverb => NRev r2 => dac;
     recv.listen();
     recv.event( "/addStar, ii" ) @=> OscEvent addStar;
     recv.event( "/endConst, i" ) @=> OscEvent endConst;
-    recv.event( "/resetEverythingOF, s" ) @=> OscEvent resetEverythingOF;
+    recv.event( "/resetOF, s" ) @=> OscEvent resetOF;
 
 //——————————————————————————————————————————————// Application Variables /
 
@@ -41,7 +41,22 @@ resetEverythingCK();
 spork ~ globalpulse();
 
 fun void ofReset(){
-    
+/*    
+    while (true){
+
+        resetOF => now;
+        0 => cC;
+        for (0 => int i; i < consts.size(); i++){
+         consts[i].heatDeath.broadcast();   
+        }
+        
+        Constellation j;
+        j.init(cC);
+        xmit.startMsg( "/addConstellation", "i" );
+        cC => xmit.addInt;
+        
+    }
+    */
 }
 
 fun void globalpulse(){
@@ -152,6 +167,7 @@ fun void playBackSingleStar(Constellation con){
     spork ~ deathHandle(me.id(),con);
     while (con.Playback){
         spork ~ playNote(con.stars[0].x,con.stars[0].y,con);
+        sendCollision(0,con);
         for (0 => int i; i < con.stars[0].t; i++){
             pulse => now;   
         }
@@ -166,12 +182,11 @@ fun void playBackConstellation(Constellation con){
     0 => int totalCount;
     true => con.Playback;
     spork ~ playNote(con.stars[0].x,con.stars[0].y,con);
-    spork ~ interp2(0,con);
+    sendCollision(0,con);
     spork ~ deathHandle(me.id(),con);
     
     while(true)
     {
-        
         con.stars[starIndex].x => float xVal;
         con.stars[starIndex].y => float yVal;
         if ((con.stars[starIndex].t == timeGuy))
@@ -179,9 +194,10 @@ fun void playBackConstellation(Constellation con){
             
             // if(starIndex != con.stars.size()) 
             spork ~ playNote(con.stars[starIndex].x,con.stars[starIndex].y,con);
+        sendCollision(starIndex,con);
         //spork ~ interpolator(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())],con.IDNumber);
         //spork ~ interp(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())],con.IDNumber);
-        if (con.Playback ) spork ~ interp2(starIndex,con);
+        //if (con.Playback ) spork ~ interp2(starIndex,con);
         (starIndex + 1) % con.stars.cap() => starIndex;
         //if (starIndex == con.stars.size()) 0 => starIndex;
         //timeGuy +=> totalCount;
@@ -221,12 +237,22 @@ cC => xmit.addInt;
 spork ~ OSCListener1();
 spork ~ OSCListener2();
 
+fun void sendCollision(int index, Constellation con){
+    xmit.startMsg("/pPosition", "iii");
+    xmit.addInt(con.IDNumber);
+    xmit.addInt(index);
+    xmit.addInt(con.stars[(index+1) % con.stars.size()].t);   
+}
+
 
 fun void playNote(int x, int y, Constellation con){ 
+
     Rhodey r => ADSR j => reverb;
     j.set((62 * y)::ms, (80 * y)::ms,1.0,300::ms);
     0.3 => r.gain;
-    Std.mtof(notes[x] - (con.IDNumber * 12)) => r.freq;
+    x / notes.size() => int octave;
+    x % notes.size() => int interval;
+    Std.mtof(12 * octave + notes[interval]) => r.freq;
     0.6 => r.noteOn;
     j.keyOn();
     ((62*y) + 30)::ms => now;
@@ -244,12 +270,14 @@ fun void oscAddStar(int x, int y){
 
 fun void interp2(int index, Constellation conn)
 {
+    /*
     if (!conn.isEmpty){
         xmit.startMsg("/pPosition", "iii");
         index => xmit.addInt;
         conn.stars[index].t => xmit.addInt;
         conn.IDNumber => xmit.addInt;
     }
+    */
 }
 
 
@@ -293,7 +321,7 @@ fun void OSCListener2(){
         if( endConst.nextMsg() != 0){
             endConst.getInt() => int value;
             c.endConstellation(value);
-                        c @=> consts[value];
+            c @=> consts[value];
             if (consts[value].stars.size() > 1){
             spork ~ playBackConstellation(consts[value]);
         }

@@ -19,13 +19,15 @@ class constellation : public ofBaseApp{
     
     
     public :
-    void drawStar(ofPoint theStar);
+    void drawStar(int _index);
     void setup(ofPoint size,int _granularity, ofFbo _fbo, int _myID);
     void draw();
     void update(int myIndex);
     void addPoint(ofPoint thePoint);
     void endConstellation();
     void interpolateBetweenPoints(float x, float y);
+    void zero();
+    void setTarget(int _target, int _targetTime);
     
     float round(float number, float round);
 
@@ -38,6 +40,7 @@ class constellation : public ofBaseApp{
     
     ofFbo sphereWindow;
     vector<ofPoint> myCoords;
+    vector<float> myStarSize;
     
     
     ofImage image;
@@ -46,9 +49,9 @@ class constellation : public ofBaseApp{
     //ofxOscMessage oscMessage;
     ofPoint pbp;
     ofPoint dbp;
-    int intTime;
+    ofVec2f direction;
+    int target;
     int interpIndex;
-    
     bool isFinished;
     
    // ofxOscReceiver oscReceiver;

@@ -2,38 +2,45 @@
 
 static const int scaleFactor = 1;
 static const int border = 5;
-static const int granularity = 16;
+static const int granularity = 32;
+static const int constellationAmount = 4;
 //--------------------------------------------------------------
 void testApp::setup(){
     ofSetFrameRate(30);
     ofSetVerticalSync(true);
-
+    
     
     oscSender.setup( HOST, PORT );
     oscReceiver.setup( InPORT );
-
+   //bonjourServer.
+    bonjourServer.startService("_osc._udp.", "Astral", PORT,"Astral" );
+    
     myBDStart = ofVec2f(20, 30);
     myBDSize = ofVec2f(400, 400);
-    fbo.allocate(myBDSize.x + (2 * border),myBDSize.y + (2 * border), GL_RGBA,4);
-    myBD.setup(myBDSize, 16,fbo);
+    fbo.allocate(myBDSize.x + (2 * border),myBDSize.y + (2 * border), GL_RGBA,8);
+    myBD.setup(myBDSize, granularity,fbo);
     constellationCounter = 0;
-    currentConstellation.setup(myBDSize,16,fbo,constellationCounter);
+    currentConstellation.setup(myBDSize,granularity,fbo,constellationCounter);
     //constellationBank.insert(constellationBank.end(), currentConstellation);
-   // currentConstellation2.setup(myBDSize,8,fbo);
+    // currentConstellation2.setup(myBDSize,8,fbo);
     ofBackground(30,30,50);
-    
-    quadric = gluNewQuadric();
-    quadric2 = gluNewQuadric();
-    gluQuadricTexture(quadric, GL_TRUE);
-    gluQuadricNormals(quadric, GLU_SMOOTH);
-    gluQuadricTexture(quadric2, GL_TRUE);
-    gluQuadricNormals(quadric2, GLU_SMOOTH);
-    
+    /*
+     quadric = gluNewQuadric();
+     gluQuadricTexture(quadric, GL_TRUE);
+     gluQuadricNormals(quadric, GLU_SMOOTH);
+     */
     ofDisableArbTex();
     
     bg.loadImage("bg.jpg");
     bg.resize(ofGetWidth(), ofGetHeight());
-
+    
+    ofxOscMessage m;
+    m.setAddress( "/resetOF" );
+    m.addStringArg("resetOF");
+    oscSender.sendMessage( m);
+    
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -46,20 +53,18 @@ void testApp::update(){
         
         if (m.getAddress() == "/pPosition")
         {
+            constellationBank[m.getArgAsInt32(0)].setTarget(m.getArgAsInt32(1),m.getArgAsInt32(2));
             
-            /*
-            constellation co = constellationBank[m.getArgAsInt32(2)];
-            constellationBank[m.getArgAsInt32(2)].interpIndex = m.getArgAsInt32(1);
+        }
+        else if (m.getAddress() == "/resetEverythingCK"){
             
-            if(constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).x && (constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).y)){
-            constellationBank[m.getArgAsInt32(2)].interpolateBetweenPoints(constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).x, (constellationBank[m.getArgAsInt32(2)].myStars.at(m.getArgAsInt32(0)).y));
+            for (int i = 0; i < constellationAmount; i++){
+                
+                constellationBank[i].zero();
             }
-             */
-            
             
         }
         else if(m.getAddress() == "/addStar"){
-            cout << "got new star";
             int newX = m.getArgAsInt32(0) * (myBDSize.x/granularity);
             int newY = m.getArgAsInt32(1) * (myBDSize.y/granularity);
             ofPoint newPoint = ofPoint(newX,newY);
@@ -70,27 +75,9 @@ void testApp::update(){
             
             constellation newConst;
             
-            newConst.setup(myBDSize,16,fbo, (constellationCounter));
+            newConst.setup(myBDSize,granularity,fbo, (constellationCounter));
             
             if (currentConstellation.isFinished){
-            /*
-               cout <<  "placing constellation at   " << constellationBank.arraySize() << "\n";
-                
-                if (constellationBank.size() <= 4){
-                    
-                constellationBank.insert(constellationBank.end(), currentConstellation);
-                    cout << "constellation size is now " << constellationBank.size() << "\n";
-                }
-            else{
-                cout << m.getArgAsInt32(0) << "\n";
-                constellationBank[m.getArgAsInt32(0)] = currentConstellation;
-            }
-            constellationCounter =  (constellationCounter + 1) % 4;
-            currentConstellation = newConst;
-            cout << "constellation added \n";
-            }
-             */
-               // constellationBank[constellationCounter] = currentConstellation;
                 cout <<  "placing constellation at   " << m.getArgAsInt32(0) << "\n";
                 constellationBank[m.getArgAsInt32(0)] = currentConstellation;
                 constellationCounter =  (constellationCounter + 1) % 4;
@@ -98,19 +85,24 @@ void testApp::update(){
             }
         }
     }
-        
+    
     fbo.begin();
-    ofClear(255,255,255,10);
+    ofClear(255,255,255);
     fbo.end();
     for (int i = 0; i < 4; i++){
         if(constellationBank[i].isFinished){
-        constellationBank[i].update(i);
-        constellationBank[i].draw();
+            constellationBank[i].update(i);
+            constellationBank[i].draw();
         }
     }
+    currentConstellation.update(0);
     currentConstellation.draw();
-   // currentConstellation2.draw();
-
+    /*
+     fbo.readToPixels(fboPixels);
+     image.setFromPixels(fboPixels);
+     */
+    // currentConstellation2.draw();
+    
 }
 
 //--------------------------------------------------------------
@@ -121,7 +113,23 @@ void testApp::draw(){
     myBD.draw();
     //currentConstellation.constellationWindow.draw(myBDStart.x, myBDStart.y);
     fbo.draw(myBDStart.x, myBDStart.y);
-    //currentConstellation.sphereWindow.draw(ofGetWidth()/2 + myBDStart.x, myBDStart.y);
+    
+    /*
+     ofPushStyle();
+     fbo.readToPixels(fboPixels);
+     image.setFromPixels(fboPixels);
+     ofTranslate(ofGetWidth()/2, 3*ofGetHeight()/4, 0);
+     
+     //rotate sphere over time
+     ofRotateY(ofGetFrameNum());
+     ofRotateX(-90);
+     image.getTextureReference().bind();
+     gluSphere(quadric, 400, 50, 50);
+     image.getTextureReference().unbind();
+     ofPopStyle();
+     
+     //currentConstellation.sphereWindow.draw(ofGetWidth()/2 + myBDStart.x, myBDStart.y);
+     */
     
 }
 
@@ -141,18 +149,18 @@ void testApp::keyPressed(int key){
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
     
-
-
+    
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -163,7 +171,7 @@ void testApp::mousePressed(int x, int y, int button){
                 
                 if (y > myBDStart.y&& y < myBDSize.y + (border * 2) + myBDStart.y){
                     ofVec2f newPoint = ofVec2f(x - myBDStart.x * scaleFactor,y - myBDStart.y * scaleFactor);
-                   // ofPoint newcoord = currentConstellation.addPoint();
+                    // ofPoint newcoord = currentConstellation.addPoint();
                     float xsnapSize = currentConstellation.windowSize.x/currentConstellation.granularity;
                     float ysnapSize = currentConstellation.windowSize.y/currentConstellation.granularity;
                     int xSnap = round(newPoint.x - border,xsnapSize);
@@ -180,7 +188,7 @@ void testApp::mousePressed(int x, int y, int button){
                     //currentConstellation2.addPoint(newPoint);
                 }
             }
-                break;
+            break;
         }
         case 2: {
             currentConstellation.endConstellation();
@@ -196,27 +204,27 @@ void testApp::mousePressed(int x, int y, int button){
         default:
             break;
     }
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-
+    
 }
 
 //--------------------------------------------------------------
 void testApp::gotMessage(ofMessage msg){
-
+    
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
-
+void testApp::dragEvent(ofDragInfo dragInfo){
+    
 }
 
 float testApp::round(float number, float round) {
