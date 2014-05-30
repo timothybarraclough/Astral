@@ -8,6 +8,13 @@ reverb => NRev r2 => dac;
 //Note Selection
 [40,42,43,45,47,48,50] @=> int notes[];
 
+//——————————————————————————————————————————————// MIDI Variables /
+MidiOut mout;
+3 => int outdevice;
+
+if( !mout.open( outdevice ) ) me.exit();
+<<< "MIDI device Output:", mout.num(), " -> ", mout.name() >>>;
+
 
 //——————————————————————————————————————————————// OSC Variables /
 
@@ -30,7 +37,7 @@ reverb => NRev r2 => dac;
 16 => int granularity;
 4 => int constAmount;
 Event pulse;
-200=> int pulseTime;
+200=> float pulseTime;
 0 => int cC;
 Constellation consts[4];
 
@@ -168,6 +175,7 @@ fun void playBackSingleStar(Constellation con){
     while (con.Playback){
         spork ~ playNote(con.stars[0].x,con.stars[0].y,con);
         sendCollision(0,con);
+        spork ~ interp(0,con);
         for (0 => int i; i < con.stars[0].t; i++){
             pulse => now;   
         }
@@ -183,6 +191,7 @@ fun void playBackConstellation(Constellation con){
     true => con.Playback;
     spork ~ playNote(con.stars[0].x,con.stars[0].y,con);
     sendCollision(0,con);
+    spork ~ interp(0,con);
     spork ~ deathHandle(me.id(),con);
     
     while(true)
@@ -195,6 +204,7 @@ fun void playBackConstellation(Constellation con){
             // if(starIndex != con.stars.size()) 
             spork ~ playNote(con.stars[starIndex].x,con.stars[starIndex].y,con);
         sendCollision(starIndex,con);
+        spork ~ interp(starIndex, con);
         //spork ~ interpolator(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())],con.IDNumber);
         //spork ~ interp(con.stars[starIndex],con.stars[tmod(starIndex + 1,con.stars.size())],con.IDNumber);
         //if (con.Playback ) spork ~ interp2(starIndex,con);
@@ -238,15 +248,14 @@ spork ~ OSCListener1();
 spork ~ OSCListener2();
 
 fun void sendCollision(int index, Constellation con){
-    xmit.startMsg("/pPosition", "iii");
+    xmit.startMsg("/collide", "ii");
     xmit.addInt(con.IDNumber);
-    xmit.addInt(index);
-    xmit.addInt(con.stars[(index+1) % con.stars.size()].t);   
+    xmit.addInt(index);   
 }
 
 
 fun void playNote(int x, int y, Constellation con){ 
-
+    /*
     Rhodey r => ADSR j => reverb;
     j.set((62 * y)::ms, (80 * y)::ms,1.0,300::ms);
     0.3 => r.gain;
@@ -259,6 +268,16 @@ fun void playNote(int x, int y, Constellation con){
     j.keyOff();
     0 => r.noteOn;
     ((150*y) + 30)::ms => now;
+    */
+    
+    MidiMsg msg;
+    151 => msg.data1; 
+    x / notes.size() => int octave;
+    x % notes.size() => int interval;
+    
+    (12 * octave + notes[interval]) => msg.data2;
+    y * 6 => msg.data3;
+    mout.send(msg);
 }
 
 fun void oscAddStar(int x, int y){
@@ -278,6 +297,30 @@ fun void interp2(int index, Constellation conn)
         conn.IDNumber => xmit.addInt;
     }
     */
+}
+
+fun void interp(int index, Constellation con){
+    ((index + 1) % con.stars.size()) => int nextStar;
+    con.stars[nextStar].t => int duration;
+    con.stars[index].x => float startX;
+    con.stars[index].y => float startY;
+    con.stars[nextStar].x => float endX;
+    con.stars[nextStar].y => float endY;
+ 
+ (endX - startX) / duration / 20  => float distanceToTravelX;
+ (endY - startY) / duration / 20  => float distanceToTravelY;
+ <<<distanceToTravelX>>>;
+
+for (0 => int i; i < duration * 20; i++){     
+  xmit.startMsg("/pPosition", "iff");
+    xmit.addInt(con.IDNumber);
+    xmit.addFloat(startX);
+    xmit.addFloat(startY);
+  distanceToTravelX +=> startX;
+  distanceToTravelY +=> startY;
+  (pulseTime/20)::ms => now;  
+ }
+    
 }
 
 

@@ -28,6 +28,8 @@ class constellation : public ofBaseApp{
     void interpolateBetweenPoints(float x, float y);
     void zero();
     void setTarget(int _target, int _targetTime);
+    void setPos(float _x, float _y);
+    void collide(int _starIndex);
     
     float round(float number, float round);
 

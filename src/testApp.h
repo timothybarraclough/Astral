@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "backDrop.h"
 #include "constellation.h"
+#include "cursor.h"
 #include "ofxOSC.h"
 #include "ofxBonjour.h"
 #include <Cocoa/Cocoa.h>
@@ -11,12 +12,14 @@
 #define PORT 8080
 #define InPORT 8081
 
+
 class testApp : public ofBaseApp{
 
 	public:
 		void setup();
 		void update();
 		void draw();
+        void exit();
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -51,6 +54,9 @@ class testApp : public ofBaseApp{
     ofxOscReceiver oscReceiver;
     
     Server bonjourServer;
+    
+    
+    Cursor myCursor;
 
 
 		

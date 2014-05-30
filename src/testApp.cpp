@@ -2,28 +2,29 @@
 
 static const int scaleFactor = 1;
 static const int border = 5;
-static const int granularity = 32;
+static const int granularity = 24;
 static const int constellationAmount = 4;
 //--------------------------------------------------------------
 void testApp::setup(){
-    ofSetFrameRate(30);
-    ofSetVerticalSync(true);
-    
+    //ofSetFrameRate(60);
+    //ofSetVerticalSync(true);
+
     
     oscSender.setup( HOST, PORT );
     oscReceiver.setup( InPORT );
    //bonjourServer.
-    bonjourServer.startService("_osc._udp.", "Astral", PORT,"Astral" );
+    bonjourServer.startService("_osc._udp.", "Astral", InPORT,"Astral" );
     
     myBDStart = ofVec2f(20, 30);
-    myBDSize = ofVec2f(400, 400);
+    myBDSize = ofVec2f(600, 600);
+    
     fbo.allocate(myBDSize.x + (2 * border),myBDSize.y + (2 * border), GL_RGBA,8);
     myBD.setup(myBDSize, granularity,fbo);
     constellationCounter = 0;
     currentConstellation.setup(myBDSize,granularity,fbo,constellationCounter);
     //constellationBank.insert(constellationBank.end(), currentConstellation);
     // currentConstellation2.setup(myBDSize,8,fbo);
-    ofBackground(30,30,50);
+    ofBackground(30,130,50);
     /*
      quadric = gluNewQuadric();
      gluQuadricTexture(quadric, GL_TRUE);
@@ -39,8 +40,9 @@ void testApp::setup(){
     m.addStringArg("resetOF");
     oscSender.sendMessage( m);
     
-    
-    
+    ofColor c(255,255,255,180);
+    myCursor.setup(fbo,c);
+    myCursor.position = ofPoint(fbo.getWidth()/2,fbo.getHeight()/2);
 }
 
 //--------------------------------------------------------------
@@ -50,12 +52,27 @@ void testApp::update(){
         // get the next message
         ofxOscMessage m;
         oscReceiver.getNextMessage( &m );
-        
+        /*
         if (m.getAddress() == "/pPosition")
         {
             constellationBank[m.getArgAsInt32(0)].setTarget(m.getArgAsInt32(1),m.getArgAsInt32(2));
             
         }
+         */
+        if (m.getAddress() == "/pPosition")
+        {
+            constellationBank[m.getArgAsInt32(0)].setPos(m.getArgAsFloat(1),m.getArgAsFloat(2));
+            
+            
+        }
+        
+        if (m.getAddress() == "/collide")
+        {
+            constellationBank[m.getArgAsInt32(0)].collide(m.getArgAsInt32(1));
+            
+            
+        }
+        
         else if (m.getAddress() == "/resetEverythingCK"){
             
             for (int i = 0; i < constellationAmount; i++){
@@ -84,6 +101,23 @@ void testApp::update(){
                 currentConstellation = newConst;
             }
         }
+        
+        else if(m.getAddress() == "/Hoops"){
+            cout << m.getAddress() << "     ";
+            cout << m.getArgAsInt32(0) << "     ";
+            cout << m.getArgAsInt32(1) << "\n";
+            
+            if (m.getArgAsInt32(0)){
+                myCursor.position.x = m.getArgAsInt32(1) * fbo.getWidth() / 127.0;
+            }
+            
+            
+           
+        }
+        
+        else {
+            
+        }
     }
     
     fbo.begin();
@@ -97,6 +131,10 @@ void testApp::update(){
     }
     currentConstellation.update(0);
     currentConstellation.draw();
+    
+        //myCursor.draw();
+    
+   // myCursor.update();
     /*
      fbo.readToPixels(fboPixels);
      image.setFromPixels(fboPixels);
@@ -113,6 +151,7 @@ void testApp::draw(){
     myBD.draw();
     //currentConstellation.constellationWindow.draw(myBDStart.x, myBDStart.y);
     fbo.draw(myBDStart.x, myBDStart.y);
+    
     
     /*
      ofPushStyle();
@@ -172,18 +211,19 @@ void testApp::mousePressed(int x, int y, int button){
                 if (y > myBDStart.y&& y < myBDSize.y + (border * 2) + myBDStart.y){
                     ofVec2f newPoint = ofVec2f(x - myBDStart.x * scaleFactor,y - myBDStart.y * scaleFactor);
                     // ofPoint newcoord = currentConstellation.addPoint();
-                    float xsnapSize = currentConstellation.windowSize.x/currentConstellation.granularity;
-                    float ysnapSize = currentConstellation.windowSize.y/currentConstellation.granularity;
-                    int xSnap = round(newPoint.x - border,xsnapSize);
-                    int ySnap = round(newPoint.y - border,ysnapSize);
+                    float xsnapSize = currentConstellation.windowSize.x/granularity;
+                    float ysnapSize = currentConstellation.windowSize.y/granularity;
+                    float xSnap = round(newPoint.x - border,xsnapSize);
+                    float ySnap = round(newPoint.y - border,ysnapSize);
                     
                     ofPoint starSnapped = ofPoint(xSnap, ySnap);
-                    ofPoint newcoord = ofPoint(xSnap/xsnapSize,ySnap/ysnapSize);
+                    starSnapped /= xsnapSize;
+                   // ofPoint newcoord = ofPoint(xSnap/xsnapSize,ySnap/ysnapSize);
                     ofxOscMessage m;
                     
                     m.setAddress( "/addStar" );
-                    m.addIntArg( newcoord.x);
-                    m.addIntArg( newcoord.y);
+                    m.addIntArg( starSnapped.x);
+                    m.addIntArg( starSnapped.y);
                     oscSender.sendMessage( m );
                     //currentConstellation2.addPoint(newPoint);
                 }
@@ -225,6 +265,11 @@ void testApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void testApp::dragEvent(ofDragInfo dragInfo){
     
+}
+
+void testApp::exit(){
+    cout << "chuck is kill \n no \n";
+    system("chuck --kill");
 }
 
 float testApp::round(float number, float round) {

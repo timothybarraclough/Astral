@@ -25,6 +25,15 @@ void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo, int _myID
     
 }
 
+
+
+void constellation::collide(int _theStar){
+    
+    myStarSize.at(_theStar) = 0;
+    pbp.x = myStars.at(_theStar).x;
+    pbp.y = myStars.at(_theStar).y;
+}
+
 void constellation::setTarget(int _target, int _targetTime){
     pbp = myStars.at(_target);
     dbp = myStars.at(_target + 1);
@@ -37,12 +46,38 @@ void constellation::setTarget(int _target, int _targetTime){
     direction /= _targetTime;
 }
 
+
+
+void constellation::setPos(float _x, float _y){
+    
+    pbp.x = (_x * (windowSize.x/granularity)/2.0) +  (pbp.x /2.0);
+    pbp.y = (_y * (windowSize.y/granularity)/2.0) + (pbp.y /2.0);
+
+    
+    //const float dt = (1.0 / 10);
+    /*
+    const float dt = 0.01;
+    const double RC = 0.3;
+    const double alpha = dt / (RC + dt);
+    static float x0 = 0;
+    static float yz = 0;
+    
+    //CMAcceleration smoothed;
+    pbp.x = (alpha * _x) + (1.0 - alpha) * x0;
+    pbp.y = (alpha * _y) + (1.0 - alpha) * yz;
+   // cout << pbp.x << "  We have changed to this";
+     */
+    
+    
+    
+}
+
 void constellation::update(int myIndex){
     
     if (isFinished)
     {
         //direction *= 2;
-        pbp += direction;
+        //pbp += direction;
     }
     
     for (int i = 0; i < myStars.size(); i++){
@@ -60,6 +95,7 @@ void constellation::interpolateBetweenPoints(float x, float y){
 }
 
 void constellation::draw(){
+    
     
     ofPushStyle();
     constellationWindow.begin();
@@ -86,7 +122,9 @@ void constellation::draw(){
     
     //ofSetColor(255,255,255,255);
     ofSetColor(255, 180, 160,190);
-    if(isFinished)ofCircle(pbp.x, pbp.y, 4);
+    if(isFinished){
+       if(myStars.size() > 2)ofCircle(pbp.x, pbp.y, 4);
+    }
     ofSetColor(255, 180, 160,30);
     // myBD.draw();
     

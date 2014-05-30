@@ -8,7 +8,10 @@ int main( ){
 
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
-	// pass in width and height too:
+	
+    // pass in width and height too:
+   // system("chuck --kill");
+    system("chuck /Developer/Astral/First_Astral_Sketch_Open_Frameworks/ChucK/Astral_brain.ck &");
 	ofRunApp(new testApp());
 
 }
