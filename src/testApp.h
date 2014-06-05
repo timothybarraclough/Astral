@@ -7,6 +7,7 @@
 #include "ofxOSC.h"
 #include "ofxBonjour.h"
 #include <Cocoa/Cocoa.h>
+#include "iOSDevice.h"
 
 #define HOST "localhost"
 #define PORT 8080
@@ -54,9 +55,10 @@ class testApp : public ofBaseApp{
     ofxOscReceiver oscReceiver;
     
     Server bonjourServer;
-    
-    
     Cursor myCursor;
+    
+    vector<iOSDevice> iOSDevices;
+    //iOSDevice j;
 
 
 		

@@ -11,6 +11,7 @@
 		16AB83D9D862B91E9421E3C8 /* ofxMidiOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C794F73CD7262AB830BD5859 /* ofxMidiOut.cpp */; };
 		2A8E1E5C9D31CCD2D411B134 /* ofxMidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE71E86E8036D3ADA8BB0A4D /* ofxMidiMessage.cpp */; };
 		331904A7517EE0E3BCF5D91D /* ofxRtMidiIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5033BD0DCCC3DA63EFE25C32 /* ofxRtMidiIn.cpp */; };
+		540FC027193EBB2B009ACD24 /* iOSDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 540FC025193EBB2B009ACD24 /* iOSDevice.cpp */; };
 		5413AED11936B52E00AFB1BB /* cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5413AECF1936B52E00AFB1BB /* cursor.cpp */; };
 		542388451935560600B2C96E /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5423883E1935560600B2C96E /* Client.mm */; };
 		542388461935560600B2C96E /* Events.mm in Sources */ = {isa = PBXBuildFile; fileRef = 542388401935560600B2C96E /* Events.mm */; };
@@ -109,6 +110,8 @@
 		4AA59EAFF8EB23BBC60DC288 /* NetworkingUtils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtils.cpp; path = ../../of_v0.8.0_osx_release/addons/ofxOsc/libs/oscpack/src/ip/posix/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
 		4F56A641A812044E5EC7EC42 /* RtError.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = RtError.h; path = ../../of_v0.8.0_osx_release/addons/ofxMidi/libs/rtmidi/RtError.h; sourceTree = SOURCE_ROOT; };
 		5033BD0DCCC3DA63EFE25C32 /* ofxRtMidiIn.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxRtMidiIn.cpp; path = ../../of_v0.8.0_osx_release/addons/ofxMidi/src/desktop/ofxRtMidiIn.cpp; sourceTree = SOURCE_ROOT; };
+		540FC025193EBB2B009ACD24 /* iOSDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = iOSDevice.cpp; sourceTree = "<group>"; };
+		540FC026193EBB2B009ACD24 /* iOSDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSDevice.h; sourceTree = "<group>"; };
 		5413AECF1936B52E00AFB1BB /* cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cursor.cpp; path = ../cursor.cpp; sourceTree = "<group>"; };
 		5413AED01936B52E00AFB1BB /* cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cursor.h; path = ../cursor.h; sourceTree = "<group>"; };
 		5423883D1935560600B2C96E /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
@@ -881,6 +884,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				54296DF219296CFE0024979C /* backDrop.cpp */,
 				54296DF319296CFE0024979C /* backDrop.h */,
+				540FC025193EBB2B009ACD24 /* iOSDevice.cpp */,
+				540FC026193EBB2B009ACD24 /* iOSDevice.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -996,7 +1001,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -f ../../of_v0.8.0_osx_release/libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/libfmodex.dylib\"; install_name_tool -change ./libfmodex.dylib @executable_path/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\n";
+			shellScript = "cp -f ../../of_v0.8.0_osx_release/libs/fmodex/lib/osx/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/libfmodex.dylib\"; install_name_tool -change ./libfmodex.dylib @executable_path/libfmodex.dylib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/MacOS/$PRODUCT_NAME\";\nmkdir -p \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -f \"$ICON_FILE\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/\"\ncp -r bin/data \"$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources\";\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1018,6 +1023,7 @@
 				549617EF192C87ED007663CA /* NetworkingUtils.cpp in Sources */,
 				549617ED192C87ED007663CA /* ofxOscSender.cpp in Sources */,
 				54296DF7192982570024979C /* constellation.cpp in Sources */,
+				540FC027193EBB2B009ACD24 /* iOSDevice.cpp in Sources */,
 				549617F2192C87ED007663CA /* OscPrintReceivedElements.cpp in Sources */,
 				331904A7517EE0E3BCF5D91D /* ofxRtMidiIn.cpp in Sources */,
 				549617E9192C87ED007663CA /* ofxOscBundle.cpp in Sources */,

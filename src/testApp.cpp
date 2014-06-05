@@ -43,7 +43,11 @@ void testApp::setup(){
     ofColor c(255,255,255,180);
     myCursor.setup(fbo,c);
     myCursor.position = ofPoint(fbo.getWidth()/2,fbo.getHeight()/2);
+    
+    //iOSDevices.resize(0);
 }
+
+
 
 //--------------------------------------------------------------
 void testApp::update(){
@@ -52,13 +56,6 @@ void testApp::update(){
         // get the next message
         ofxOscMessage m;
         oscReceiver.getNextMessage( &m );
-        /*
-        if (m.getAddress() == "/pPosition")
-        {
-            constellationBank[m.getArgAsInt32(0)].setTarget(m.getArgAsInt32(1),m.getArgAsInt32(2));
-            
-        }
-         */
         if (m.getAddress() == "/pPosition")
         {
             constellationBank[m.getArgAsInt32(0)].setPos(m.getArgAsFloat(1),m.getArgAsFloat(2));
@@ -66,7 +63,7 @@ void testApp::update(){
             
         }
         
-        if (m.getAddress() == "/collide")
+        else if (m.getAddress() == "/collide")
         {
             constellationBank[m.getArgAsInt32(0)].collide(m.getArgAsInt32(1));
             
@@ -74,6 +71,7 @@ void testApp::update(){
         }
         
         else if (m.getAddress() == "/resetEverythingCK"){
+            
             
             for (int i = 0; i < constellationAmount; i++){
                 
@@ -99,23 +97,76 @@ void testApp::update(){
                 constellationBank[m.getArgAsInt32(0)] = currentConstellation;
                 constellationCounter =  (constellationCounter + 1) % 4;
                 currentConstellation = newConst;
+                
             }
         }
         
-        else if(m.getAddress() == "/Hoops"){
-            cout << m.getAddress() << "     ";
-            cout << m.getArgAsInt32(0) << "     ";
-            cout << m.getArgAsInt32(1) << "\n";
-            
-            if (m.getArgAsInt32(0)){
-                myCursor.position.x = m.getArgAsInt32(1) * fbo.getWidth() / 127.0;
-            }
+        else if(m.getAddress() == "/cursorPosition"){
+           // cout << m.getAddress() << "     ";
+           // cout << m.getArgAsInt32(0) << "     ";
+           // cout << m.getArgAsInt32(1) << "\n";
             
             
+            float x = m.getArgAsFloat(0) * fbo.getWidth() / 512.0;
+            float y = m.getArgAsFloat(1) * fbo.getHeight()/512.0;
+            myCursor.update(x,y);
+        }
+        
+        else if(m.getAddress() == "/iOSEndConst"){
            
+            keyPressed(32);
+            cout << "received end const message \n";
+            
+        }
+        
+        else if(m.getAddress() == "/iOSAddStar"){
+            cout <<"received Add star message \n";
+            
+            mousePressed(myCursor.position.x+myBDStart.x,myCursor.position.y+myBDStart.y,0);
+            
+        }
+        
+        
+        else if(m.getAddress() == "/setupiOSDevice"){
+            //string _host = m.getArgAsString(0);
+            string _host = m.getRemoteIp();
+            bool pleaseConnect = true;
+            for (int i = 0; i < iOSDevices.size();i++){
+                if (iOSDevices.at(i).ipAddress == _host){
+                    pleaseConnect = false;
+                   // iOSDevices.at(i).close();
+                    iOSDevices.at(i).setup();
+                }
+            }
+            if (pleaseConnect)
+            {
+            int _port = m.getArgAsInt32(0);
+            cout << "we got to here at least...";
+            iOSDevice j = iOSDevice(_host,_port,iOSDevices.size());
+            cout << iOSDevices.size();
+            iOSDevices.push_back(j);
+            //iOSDevices.resize(iOSDevices.size());
+            //iOSDevices.insert(iOSDevices.end(), j);
+            cout << "pushed back the size and inserted our new device \n";
+            
+            //iOSDevices.at(iOSDevices.size()).setup();
+            iOSDevices.back().setup();
+            }
+            else {
+                
+            };
+            
+        }
+        
+        else if (m.getAddress() == "/latencyPing"){
+            
+            cout <<"Received our Ping \n";
+            iOSDevices.back().latencyTest();
+            
         }
         
         else {
+            cout << m.getAddress() << "     \n";
             
         }
     }
@@ -132,7 +183,7 @@ void testApp::update(){
     currentConstellation.update(0);
     currentConstellation.draw();
     
-        //myCursor.draw();
+        myCursor.draw();
     
    // myCursor.update();
     /*
@@ -151,25 +202,6 @@ void testApp::draw(){
     myBD.draw();
     //currentConstellation.constellationWindow.draw(myBDStart.x, myBDStart.y);
     fbo.draw(myBDStart.x, myBDStart.y);
-    
-    
-    /*
-     ofPushStyle();
-     fbo.readToPixels(fboPixels);
-     image.setFromPixels(fboPixels);
-     ofTranslate(ofGetWidth()/2, 3*ofGetHeight()/4, 0);
-     
-     //rotate sphere over time
-     ofRotateY(ofGetFrameNum());
-     ofRotateX(-90);
-     image.getTextureReference().bind();
-     gluSphere(quadric, 400, 50, 50);
-     image.getTextureReference().unbind();
-     ofPopStyle();
-     
-     //currentConstellation.sphereWindow.draw(ofGetWidth()/2 + myBDStart.x, myBDStart.y);
-     */
-    
 }
 
 //--------------------------------------------------------------
@@ -183,6 +215,7 @@ void testApp::keyPressed(int key){
             oscSender.sendMessage( m);
         }
     }
+   // else cout << key;
 }
 
 //--------------------------------------------------------------
@@ -269,7 +302,9 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 void testApp::exit(){
     cout << "chuck is kill \n no \n";
-    system("chuck --kill");
+    ofFilePath p;
+    ofSystem("chuck --kill");
+    
 }
 
 float testApp::round(float number, float round) {

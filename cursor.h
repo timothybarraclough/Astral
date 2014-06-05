@@ -18,7 +18,7 @@ class Cursor : public ofBaseApp{
     ofPoint position;
     ofFbo fbo;
     ofColor col;
-    void update();
+    void update(float _x, float _y);
     void setup(ofFbo _fbo, ofColor _col);
     void draw();
     
