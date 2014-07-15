@@ -15,6 +15,19 @@ void backDrop::setup(ofPoint _size, int _granularity, ofFbo _fbo){
     windowSize = _size;
     backDropWindow = _fbo;
     
+    int amount = windowSize.x / granularity;
+    for (int i = 0; i < granularity; i+=amount){
+        for(int j = 0; j < granularity; j+= amount){
+            
+            points.push_back(ofVec3f(i,j,0));
+            
+        }
+        
+        
+    }
+    
+    
+    
 }
 
 void backDrop::draw(){

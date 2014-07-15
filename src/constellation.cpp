@@ -9,8 +9,9 @@
 #include "constellation.h"
 const int border = 5;
 
-void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo, int _myID){
+void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo, int _myID, vector<ofColor> _colorScheme){
     
+   // colorScheme = _colorScheme;
     granularity = _granularity;
     myID = _myID;
     constellationWindow = _fbo;
@@ -22,6 +23,14 @@ void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo, int _myID
     //constellationWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
     sphereWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
     myStars.resize(0);
+    colorScheme.push_back(ofColor(203,68,68));
+    colorScheme.push_back(ofColor(43,129,193));
+    colorScheme.push_back(ofColor(88,188,161));
+    colorScheme.push_back(ofColor(211,151,11));
+    
+
+    // colorScheme[2] = ofColor(88,188,161);
+    // colorScheme[3] = ofColor(211,151,11);
     
 }
 
@@ -81,7 +90,8 @@ void constellation::update(int myIndex){
     }
     
     for (int i = 0; i < myStars.size(); i++){
-        if  (myStarSize[i] < 20) myStarSize[i] += 0.5;
+        if  (myStarSize[i] < 18) myStarSize[i] += 1.0;
+        //else myStarSize[i] = 0;
     }
     
     
@@ -99,29 +109,26 @@ void constellation::draw(){
     
     ofPushStyle();
     constellationWindow.begin();
-    //ofClear(255,255,255,0);
-    
-    ofSetColor(40,40,200,200);
-    // ofRectRounded(0, 0, constellationWindow.getWidth() , constellationWindow.getHeight(),5);
-    
-    
     ofTranslate(border, border);
-    ofSetColor(20,220,180);
     ofSetLineWidth(1);
     
     
     for (int i = 0; i < myStars.size(); i++){
-        ofSetColor(255, 180, 160,190);
+        
         drawStar(i);
         if (i > 0) {
             
-            ofSetColor(255, 180, 160,90);
+            //ofSetColor(255, 180, 160,90);
+            ofSetColor(ofColor(colorScheme[myID],90));
+
             ofLine(myStars.at(i-1),myStars.at(i));
         }
     }
     
     //ofSetColor(255,255,255,255);
-    ofSetColor(255, 180, 160,190);
+    //ofSetColor(255, 180, 160,190);
+    ofSetColor(ofColor(colorScheme[myID],190));
+
     if(isFinished){
        if(myStars.size() > 2)ofCircle(pbp.x, pbp.y, 4);
     }
@@ -143,6 +150,7 @@ void constellation::addPoint(ofPoint theStar){
         float ysnapSize = windowSize.y/granularity;
         int xSnap = round(theStar.x - border,xsnapSize);
         int ySnap = round(theStar.y - border,ysnapSize);
+        int z = ofRandom(-200,200);
         
         ofPoint starSnapped = ofPoint(xSnap, ySnap);
         ofPoint coord = ofPoint(xSnap/xsnapSize,ySnap/ysnapSize);
@@ -154,10 +162,27 @@ void constellation::addPoint(ofPoint theStar){
     }
 }
 
+void constellation::addStarByCoord(ofPoint theStar){
+    myCoords.insert(myCoords.end(), theStar);
+    theStar.x *= windowSize.x/granularity;
+    theStar.y *= windowSize.y/granularity;
+    myStars.insert(myStars.end(), theStar);
+    myStarSize.insert(myStarSize.end(), 0);
+    ofxOscMessage m;
+    
+  //  oscSender.sendMessage( m );
+    
+}
+
 void constellation::drawStar(int _index){
+    ofSetColor(colorScheme[myID]);
+    
     ofCircle(myStars[_index].x, myStars[_index].y, 2);
-    ofSetColor(255, 255, 255,200 - (10 * myStarSize[_index]));
-    ofCircle(myStars[_index].x, myStars[_index].y, myStarSize[_index]);
+    ofSetColor(ofColor(colorScheme[myID],185 - (10 * myStarSize[_index])));
+  //  ofSetColor(255, 255, 255,200 - (10 * myStarSize[_index]));
+    
+   if (myStarSize[_index] > 0) ofCircle(myStars[_index].x, myStars[_index].y, myStarSize[_index]);
+    
 }
 
 void constellation::endConstellation(){
@@ -168,6 +193,7 @@ void constellation::endConstellation(){
     pbp.set(myStars.at(0).x,myStars.at(0).y);
     isFinished = true;
     cout << "isFinished set to true";
+    
 }
 
 //Nice rounding function

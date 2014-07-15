@@ -18,6 +18,7 @@ public :
     string ipAddress;
     iOSDevice(string _ipAddress, int _port, int IDNumber);
     void latencyTest();
+    void latencyTest2();
     void setVectorNumber(int i);
     void returnSetup();
     void setup();

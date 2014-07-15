@@ -8,6 +8,13 @@
 #include "ofxBonjour.h"
 #include <Cocoa/Cocoa.h>
 #include "iOSDevice.h"
+#include "menuBar.h"
+#include "ofxFX.h"
+#include "ofxBokeh.h"
+#include "ofxRipples.h"
+#include "ofxBounce.h"
+
+
 
 #define HOST "localhost"
 #define PORT 8080
@@ -59,6 +66,20 @@ class testApp : public ofBaseApp{
     
     vector<iOSDevice> iOSDevices;
     //iOSDevice j;
+    
+    menuBar menu;
+    vector<ofColor> colorScheme;
+   // vector<unique_ptr> colorScheme;
+    //vector<std::unique_ptr> colorScheme;
+    
+    //ofxBokeh         blur;
+    ofxRipples  blur;
+    ofxBounce   bounce;
+    
+    //ofImage image;
+    
+    void exportImage();
+    void changeConstellation(int index);
 
 
 		

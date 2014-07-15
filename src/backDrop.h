@@ -20,7 +20,7 @@ public:
     ofFbo backDropWindow;
     ofPoint windowSize;
     int granularity;
-    
+    vector<ofVec3f> points;
 
 };
 

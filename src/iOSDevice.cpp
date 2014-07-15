@@ -23,6 +23,15 @@ void iOSDevice::latencyTest(){
     m.setAddress( "/latencyPing" );
     m.addIntArg(0);
     sender.sendMessage(m);
+    
+}
+
+void iOSDevice::latencyTest2(){
+    ofxOscMessage m;
+    m.setAddress( "/latencyPing2" );
+    m.addIntArg(0);
+    sender.sendMessage(m);
+    
 }
 
 

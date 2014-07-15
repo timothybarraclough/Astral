@@ -19,8 +19,9 @@ class constellation : public ofBaseApp{
     
     
     public :
+    vector<ofColor> colorScheme;
     void drawStar(int _index);
-    void setup(ofPoint size,int _granularity, ofFbo _fbo, int _myID);
+    void setup(ofPoint size,int _granularity, ofFbo _fbo, int _myID,vector<ofColor> colorScheme);
     void draw();
     void update(int myIndex);
     void addPoint(ofPoint thePoint);
@@ -37,7 +38,7 @@ class constellation : public ofBaseApp{
     ofPoint windowSize;
     
     int granularity;
-    vector<ofPoint> myStars;
+    vector<ofVec3f> myStars;
     int myID;
     
     ofFbo sphereWindow;
@@ -55,6 +56,8 @@ class constellation : public ofBaseApp{
     int target;
     int interpIndex;
     bool isFinished;
+    
+    void addStarByCoord(ofPoint theStar);
     
    // ofxOscReceiver oscReceiver;
     
