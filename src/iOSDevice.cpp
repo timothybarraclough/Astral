@@ -23,16 +23,8 @@ void iOSDevice::latencyTest(){
     m.setAddress( "/latencyPing" );
     m.addIntArg(0);
     sender.sendMessage(m);
-    
 }
 
-void iOSDevice::latencyTest2(){
-    ofxOscMessage m;
-    m.setAddress( "/latencyPing2" );
-    m.addIntArg(0);
-    sender.sendMessage(m);
-    
-}
 
 
 void iOSDevice::setup(){
@@ -60,5 +52,13 @@ void iOSDevice::setVectorNumber(int i){
     ofxOscMessage m;
     m.setAddress("/setNumber");
     m.addIntArg(i);
+    sender.sendMessage(m);
+}
+
+void iOSDevice::playNote(int i, int j){
+    ofxOscMessage m;
+    m.setAddress("/playNote");
+    m.addIntArg(i);
+    m.addIntArg(j);
     sender.sendMessage(m);
 }

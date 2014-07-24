@@ -18,11 +18,12 @@ public :
     string ipAddress;
     iOSDevice(string _ipAddress, int _port, int IDNumber);
     void latencyTest();
-    void latencyTest2();
     void setVectorNumber(int i);
+    void playNote(int i, int j);
     void returnSetup();
     void setup();
     void close();
+    
 };
 
 

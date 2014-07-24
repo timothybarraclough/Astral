@@ -6,7 +6,7 @@
 
 //========================================================================
 int main( ){
-	ofSetupOpenGL(800,800,OF_WINDOW);			// <-------- setup the GL context
+	ofSetupOpenGL(552,682,OF_WINDOW);			// <-------- setup the GL context
 
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
@@ -21,10 +21,11 @@ int main( ){
     string i = x.getAbsolutePath("chuck");
     //ofSystem("chuck --kill");
     
-   // ofSystem(i + " --kill");
+    //ofSystem(i + " --kill");
     
     //This is the one I am using presently.
     ofSystem(i + " " + j + " &");
+    
     
 	ofRunApp(new testApp());
 

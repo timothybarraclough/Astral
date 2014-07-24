@@ -20,14 +20,8 @@ void backDrop::setup(ofPoint _size, int _granularity, ofFbo _fbo){
         for(int j = 0; j < granularity; j+= amount){
             
             points.push_back(ofVec3f(i,j,0));
-            
         }
-        
-        
     }
-    
-    
-    
 }
 
 void backDrop::draw(){
@@ -39,8 +33,6 @@ void backDrop::draw(){
     ofSetLineWidth(2);
     ofSetColor(200,200,200,80);
     ofRect(0, 0, windowSize.x, windowSize.y);
-    
-    
     ofFill();
     ofSetLineWidth(1);
     

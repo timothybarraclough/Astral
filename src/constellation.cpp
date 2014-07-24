@@ -10,28 +10,19 @@
 const int border = 5;
 
 void constellation::setup(ofPoint _size, int _granularity, ofFbo _fbo, int _myID, vector<ofColor> _colorScheme){
-    
-   // colorScheme = _colorScheme;
+
     granularity = _granularity;
     myID = _myID;
     constellationWindow = _fbo;
     windowSize = _size;
     isFinished = false;
     interpIndex = 0;
-    //windowSize.x += border * 2;
-    //windowSize.y += border * 2;
-    //constellationWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
     sphereWindow.allocate(windowSize.x + (2 * border),windowSize.y + (2 * border), GL_RGBA);
     myStars.resize(0);
     colorScheme.push_back(ofColor(203,68,68));
     colorScheme.push_back(ofColor(43,129,193));
     colorScheme.push_back(ofColor(88,188,161));
     colorScheme.push_back(ofColor(211,151,11));
-    
-
-    // colorScheme[2] = ofColor(88,188,161);
-    // colorScheme[3] = ofColor(211,151,11);
-    
 }
 
 
@@ -46,9 +37,6 @@ void constellation::collide(int _theStar){
 void constellation::setTarget(int _target, int _targetTime){
     pbp = myStars.at(_target);
     dbp = myStars.at(_target + 1);
-   // direction = pbp - dbp;
-   // direction /= 6;
-   // direction /= _targetTime;
     myStarSize.at(_target) = 0;
     direction = myStars.at(_target + 1) - myStars.at(_target);
     direction /= 6;
@@ -61,24 +49,6 @@ void constellation::setPos(float _x, float _y){
     
     pbp.x = (_x * (windowSize.x/granularity)/2.0) +  (pbp.x /2.0);
     pbp.y = (_y * (windowSize.y/granularity)/2.0) + (pbp.y /2.0);
-
-    
-    //const float dt = (1.0 / 10);
-    /*
-    const float dt = 0.01;
-    const double RC = 0.3;
-    const double alpha = dt / (RC + dt);
-    static float x0 = 0;
-    static float yz = 0;
-    
-    //CMAcceleration smoothed;
-    pbp.x = (alpha * _x) + (1.0 - alpha) * x0;
-    pbp.y = (alpha * _y) + (1.0 - alpha) * yz;
-   // cout << pbp.x << "  We have changed to this";
-     */
-    
-    
-    
 }
 
 void constellation::update(int myIndex){

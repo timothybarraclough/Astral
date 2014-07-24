@@ -49,10 +49,6 @@ class testApp : public ofBaseApp{
     ofFbo fbo;
     backDrop myBD;
     ofImage bg;
-    /*
-    GLUquadricObj *quadric;
-    GLUquadricObj *quadric2;
-     */
     ofImage image;
     ofPixels fboPixels;
     
@@ -65,21 +61,14 @@ class testApp : public ofBaseApp{
     Cursor myCursor;
     
     vector<iOSDevice> iOSDevices;
-    //iOSDevice j;
     
     menuBar menu;
     vector<ofColor> colorScheme;
-   // vector<unique_ptr> colorScheme;
-    //vector<std::unique_ptr> colorScheme;
-    
-    //ofxBokeh         blur;
-    ofxRipples  blur;
-    ofxBounce   bounce;
-    
-    //ofImage image;
     
     void exportImage();
     void changeConstellation(int index);
+    void endConstellation(int index);
+    void eraseConstellation(int index);
 
 
 		
